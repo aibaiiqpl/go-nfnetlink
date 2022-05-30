@@ -2,9 +2,9 @@ package nfqueue
 
 import (
 	"fmt"
+	"github.com/aibaiiqpl/go-nfnetlink"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
-	"github.com/subgraph/go-nfnetlink"
 	"syscall"
 )
 
@@ -212,6 +212,10 @@ func (p *NFQPacket) Drop() error {
 // Accept sets the NF_ACCEPT verdict on this packet
 func (p *NFQPacket) Accept() error {
 	return p.verdict(NF_ACCEPT)
+}
+
+func (p *NFQPacket) AcceptWithMark(mark uint32) error {
+	return p.q.nfqRequestVerdictMark(NF_ACCEPT, p.id, true, mark).Send()
 }
 
 // verdict sends a NFQNL_MSG_VERDICT message for the packet id with the verdict value v
